@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RanjuUI — Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="ranju.css">
+  <style>
+    body { display: flex; min-height: 100vh; }
+
+    /* ---- Sidebar ---- */
+    .docs-sidebar {
+      width: 260px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      z-index: 40;
+      padding: 1.25rem 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar) transparent;
+      transform: translateX(0);
+      transition: transform .3s ease;
+    }
+    .docs-sidebar-brand {
+      padding: 0 1.25rem 1rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--fg);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0.75rem;
+    }
+    .docs-sidebar-brand:hover { text-decoration: none; }
+    .docs-sidebar-brand span { color: var(--primary); }
+    .docs-sidebar-label {
+      padding: 0.5rem 1.25rem 0.25rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--muted-fg);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .docs-sidebar a {
+      display: block;
+      padding: 0.375rem 1.25rem;
+      font-size: 0.8125rem;
+      color: var(--muted-fg);
+      text-decoration: none;
+      transition: color .15s, background .15s;
+      border-radius: 0;
+    }
+    .docs-sidebar a:hover { color: var(--fg); background: var(--muted); text-decoration: none; }
+
+    /* ---- Main ---- */
+    .docs-main { flex: 1; margin-left: 260px; min-width: 0; }
+    .docs-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .docs-header-left { display: flex; align-items: center; gap: 0.5rem; }
+    .docs-header-right { display: flex; align-items: center; gap: 0.5rem; }
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      width: 2.25rem;
+      height: 2.25rem;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--fg);
+      font-size: 1.25rem;
+    }
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--overlay);
+      z-index: 39;
+    }
+    .docs-content { max-width: 860px; margin: 0 auto; padding: 2rem; }
+
+    /* ---- Hero ---- */
+    .docs-hero {
+      text-align: center;
+      padding: 3rem 0 2.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+    .docs-hero h1 { font-size: 2.75rem; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+    .docs-hero h1 span { color: var(--primary); }
+    .docs-hero p { color: var(--muted-fg); font-size: 1.125rem; max-width: 520px; margin: 0 auto; }
+
+    /* ---- Sections ---- */
+    .docs-section { padding: 2rem 0; border-bottom: 1px solid var(--border); }
+    .docs-section:last-child { border-bottom: none; }
+    .docs-section h2 { font-size: 1.5rem; margin-bottom: 0.5rem; scroll-margin-top: 4rem; }
+    .docs-section > p { color: var(--muted-fg); font-size: 0.9375rem; margin-bottom: 1.5rem; }
+    .preview {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      background: var(--bg);
+      overflow-x: auto;
+    }
+    .preview + .preview { margin-top: 1rem; }
+    .code-block {
+      background: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .code-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.75rem;
+      background: color-mix(in srgb, var(--border) 30%, transparent);
+      font-size: 0.75rem;
+      color: var(--muted-fg);
+      font-family: var(--font-mono);
+    }
+    .code-block pre {
+      margin: 0;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      padding: 0.75rem 1rem;
+      font-size: 0.8125rem;
+      overflow-x: auto;
+    }
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 2.25rem;
+      height: 2.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--fg);
+      font-size: 1.125rem;
+      transition: background .15s;
+      flex-shrink: 0;
+    }
+    .theme-toggle:hover { background: var(--muted); }
+    .stat-badges { display: flex; gap: 0.5rem; justify-content: center; margin-top: 1.25rem; flex-wrap: wrap; }
+
+    /* ---- Mobile / Tablet ---- */
+    @media (max-width: 900px) {
+      .docs-sidebar {
+        transform: translateX(-100%);
+        box-shadow: var(--shadow-xl);
+      }
+      .docs-sidebar.open { transform: translateX(0); }
+      .mobile-overlay.open { display: block; }
+      .mobile-menu-btn { display: flex; }
+      .docs-main { margin-left: 0; }
+      .docs-content { padding: 1.5rem 1rem; }
+      .docs-hero { padding: 2rem 0 2rem; margin-bottom: 2rem; }
+      .docs-hero h1 { font-size: 2rem; }
+      .docs-hero p { font-size: 1rem; padding: 0 0.5rem; }
+      .docs-section { padding: 1.5rem 0; }
+      .preview { padding: 1rem; overflow-x: auto; }
+      .grid.grid-cols-2 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .docs-hero h1 { font-size: 1.625rem; }
+      .docs-hero p { font-size: 0.9375rem; }
+      .stat-badges { gap: 0.375rem; }
+      .stat-badges .badge { font-size: 0.6875rem; padding: 0.1rem 0.5rem; }
+      .docs-content { padding: 1rem 0.75rem; }
+      .docs-header { padding: 0.625rem 0.75rem; }
+      .preview { padding: 0.75rem; }
+      .code-block pre { font-size: 0.75rem; padding: 0.625rem 0.75rem; }
+      .docs-section h2 { font-size: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <nav class="docs-sidebar scroll-area">
+    <a href="#" class="docs-sidebar-brand">
+      <span>&#9651;</span> RanjuUI
+    </a>
+    <div class="docs-sidebar-label">Getting Started</div>
+    <a href="#installation">Installation</a>
+    <a href="#theming">Theming & Dark Mode</a>
+    <div class="docs-sidebar-label">Foundation</div>
+    <a href="#typography">Typography</a>
+    <a href="#grid">Grid & Layout</a>
+    <a href="#utilities">Utilities</a>
+    <div class="docs-sidebar-label">Components</div>
+    <a href="#accordion">Accordion</a>
+    <a href="#alert">Alert</a>
+    <a href="#aspect-ratio">Aspect Ratio</a>
+    <a href="#avatar">Avatar</a>
+    <a href="#badge">Badge</a>
+    <a href="#breadcrumb">Breadcrumb</a>
+    <a href="#button">Button</a>
+    <a href="#calendar">Calendar</a>
+    <a href="#card">Card</a>
+    <a href="#carousel">Carousel</a>
+    <a href="#checkbox">Checkbox & Radio</a>
+    <a href="#collapsible">Collapsible</a>
+    <a href="#combobox">Combobox</a>
+    <a href="#command">Command Palette</a>
+    <a href="#context-menu">Context Menu</a>
+    <a href="#data-table">Data Table</a>
+    <a href="#dialog">Dialog</a>
+    <a href="#drawer">Drawer</a>
+    <a href="#dropdown">Dropdown</a>
+    <a href="#empty-state">Empty State</a>
+    <a href="#input">Input & Textarea</a>
+    <a href="#hover-card">Hover Card</a>
+    <a href="#kbd">Kbd</a>
+    <a href="#label">Label</a>
+    <a href="#menubar">Menubar</a>
+    <a href="#meter">Meter</a>
+    <a href="#pagination">Pagination</a>
+    <a href="#popover">Popover</a>
+    <a href="#progress">Progress</a>
+    <a href="#resizable">Resizable</a>
+    <a href="#scroll-area">Scroll Area</a>
+    <a href="#separator">Separator</a>
+    <a href="#sidebar-component">Sidebar</a>
+    <a href="#skeleton">Skeleton</a>
+    <a href="#slider">Slider</a>
+    <a href="#spinner">Spinner</a>
+    <a href="#switch">Switch & Toggle</a>
+    <a href="#tabs">Tabs</a>
+    <a href="#toast">Toast</a>
+    <a href="#tooltip">Tooltip</a>
+    <a href="#item-group">Item Group</a>
+  </nav>
+
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+
+  <!-- Main Content -->
+  <main class="docs-main">
+    <header class="docs-header">
+      <div class="docs-header-left">
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">&#9776;</button>
+      </div>
+      <div class="docs-header-right">
+        <a href="https://github.com/Alps-is-Core/RanjuUI" target="_blank" class="btn btn-ghost btn-sm">GitHub</a>
+        <button class="theme-toggle" onclick="Ranju.theme.toggle()" aria-label="Toggle theme">
+          <span class="theme-icon">&#9790;</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="docs-content">
+
+      <!-- Hero -->
+      <div class="docs-hero">
+        <h1><span>Ranju</span>UI</h1>
+        <p>The last UI library you'll ever need. 40+ beautiful components, zero dependencies, two files. Drop in and ship.</p>
+        <div class="stat-badges">
+          <span class="badge badge-outline">~22 KB Total</span>
+          <span class="badge badge-outline">0 Dependencies</span>
+          <span class="badge badge-outline">40+ Components</span>
+          <span class="badge badge-outline">Dark Mode</span>
+        </div>
+        <div style="margin-top:1.25rem" class="flex justify-center gap-2">
+          <a href="#installation" class="btn">Get Started</a>
+          <a href="https://github.com/Alps-is-Core/RanjuUI" target="_blank" class="btn btn-outline">GitHub</a>
+        </div>
+      </div>
+
+      <!-- Installation -->
+      <section class="docs-section" id="installation">
+        <h2>Installation</h2>
+        <p>Drop two files into your project — that's it.</p>
+        <div class="code-block">
+          <div class="code-block-header"><span>HTML</span></div>
+          <pre><code>&lt;link rel="stylesheet" href="ranju.css"&gt;
+&lt;script src="ranju.js" defer&gt;&lt;/script&gt;</code></pre>
+        </div>
+      </section>
+
+      <!-- Theming -->
+      <section class="docs-section" id="theming">
+        <h2>Theming & Dark Mode</h2>
+        <p>Set <code>data-theme="dark"</code> on the <code>&lt;html&gt;</code> element, or use the JS API. RanjuUI auto-detects system preference.</p>
+        <div class="code-block">
+          <div class="code-block-header"><span>JS</span></div>
+          <pre><code>Ranju.theme.toggle();       // switch between light/dark
+Ranju.theme.set('dark');    // force dark
+Ranju.theme.current();      // get 'light' or 'dark'</code></pre>
+        </div>
+      </section>
+
+      <!-- Typography -->
+      <section class="docs-section" id="typography">
+        <h2>Typography</h2>
+        <p>Clean heading scale, text utilities, and semantic inline elements.</p>
+        <div class="preview">
+          <h1>Heading 1</h1>
+          <h2>Heading 2</h2>
+          <h3>Heading 3</h3>
+          <h4>Heading 4</h4>
+          <p>Regular paragraph text with <strong>bold</strong>, <em>italic</em>, <code>inline code</code>, <mark>highlighted text</mark>, and <a href="#">links</a>.</p>
+          <p class="text-muted text-sm">Muted small text for secondary content.</p>
+          <blockquote>Blockquotes for pull quotes and citations.</blockquote>
+          <pre><code>const hello = "preformatted code block";</code></pre>
+        </div>
+      </section>
+
+      <!-- Grid -->
+      <section class="docs-section" id="grid">
+        <h2>Grid & Layout</h2>
+        <p>Responsive CSS grid and flexbox utility classes.</p>
+        <div class="preview">
+          <div class="grid grid-cols-3 gap-4">
+            <div class="p-4 rounded border text-center text-sm">1</div>
+            <div class="p-4 rounded border text-center text-sm">2</div>
+            <div class="p-4 rounded border text-center text-sm">3</div>
+          </div>
+        </div>
+        <div class="code-block">
+          <div class="code-block-header"><span>HTML</span></div>
+          <pre><code>&lt;div class="grid grid-cols-3 gap-4"&gt;
+  &lt;div class="p-4 rounded border"&gt;1&lt;/div&gt;
+  &lt;div class="p-4 rounded border"&gt;2&lt;/div&gt;
+  &lt;div class="p-4 rounded border"&gt;3&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </section>
+
+      <!-- Utilities -->
+      <section class="docs-section" id="utilities">
+        <h2>Utilities</h2>
+        <p>Common spacing, sizing, border-radius, shadow, and display helpers.</p>
+        <div class="preview flex flex-wrap gap-3">
+          <div class="p-3 rounded shadow-sm border text-sm">shadow-sm</div>
+          <div class="p-3 rounded shadow border text-sm">shadow</div>
+          <div class="p-3 rounded shadow-md border text-sm">shadow-md</div>
+          <div class="p-3 rounded shadow-lg border text-sm">shadow-lg</div>
+        </div>
+      </section>
+
+      <!-- Accordion -->
+      <section class="docs-section" id="accordion">
+        <h2>Accordion</h2>
+        <p>Expandable content panels, single or multi-open.</p>
+        <div class="preview">
+          <div class="accordion">
+            <div class="accordion-item" data-state="open">
+              <button class="accordion-trigger">What is RanjuUI?</button>
+              <div class="accordion-content">
+                <div class="accordion-body">RanjuUI is an ultra-lightweight, semantic UI system built with plain HTML, CSS, and minimal JavaScript. No frameworks, no build tools, no dependencies.</div>
+              </div>
+            </div>
+            <div class="accordion-item" data-state="closed">
+              <button class="accordion-trigger">How do I install it?</button>
+              <div class="accordion-content">
+                <div class="accordion-body">Just link <code>ranju.css</code> and include <code>ranju.js</code> with the defer attribute. That's two files — zero configuration.</div>
+              </div>
+            </div>
+            <div class="accordion-item" data-state="closed">
+              <button class="accordion-trigger">Is it accessible?</button>
+              <div class="accordion-content">
+                <div class="accordion-body">Yes! RanjuUI uses semantic HTML and ARIA attributes throughout. Keyboard navigation and screen readers are supported by default.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="code-block">
+          <div class="code-block-header"><span>HTML</span></div>
+          <pre><code>&lt;div class="accordion"&gt;
+  &lt;div class="accordion-item" data-state="open"&gt;
+    &lt;button class="accordion-trigger"&gt;Title&lt;/button&gt;
+    &lt;div class="accordion-content"&gt;
+      &lt;div class="accordion-body"&gt;Content here...&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </section>
+
+      <!-- Alert -->
+      <section class="docs-section" id="alert">
+        <h2>Alert</h2>
+        <p>Contextual feedback messages with optional dismiss.</p>
+        <div class="preview space-y-4">
+          <div class="alert alert-info">
+            <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+            <div class="alert-content">
+              <div class="alert-title">Info</div>
+              <div class="alert-description">This is an informational alert message.</div>
+            </div>
+            <button class="alert-close">&times;</button>
+          </div>
+          <div class="alert alert-success">
+            <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <div class="alert-content">
+              <div class="alert-title">Success</div>
+              <div class="alert-description">Operation completed successfully.</div>
+            </div>
+            <button class="alert-close">&times;</button>
+          </div>
+          <div class="alert alert-warning">
+            <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+            <div class="alert-content">
+              <div class="alert-title">Warning</div>
+              <div class="alert-description">Please review before proceeding.</div>
+            </div>
+          </div>
+          <div class="alert alert-destructive">
+            <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+            <div class="alert-content">
+              <div class="alert-title">Error</div>
+              <div class="alert-description">Something went wrong. Please try again.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Aspect Ratio -->
+      <section class="docs-section" id="aspect-ratio">
+        <h2>Aspect Ratio</h2>
+        <p>Maintain consistent aspect ratios for media containers.</p>
+        <div class="preview">
+          <div class="grid grid-cols-3 gap-4">
+            <div>
+              <div class="aspect-square rounded border flex items-center justify-center text-muted text-sm" style="background:var(--muted)">1:1</div>
+            </div>
+            <div>
+              <div class="aspect-video rounded border flex items-center justify-center text-muted text-sm" style="background:var(--muted)">16:9</div>
+            </div>
+            <div>
+              <div class="aspect-photo rounded border flex items-center justify-center text-muted text-sm" style="background:var(--muted)">4:3</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Avatar -->
+      <section class="docs-section" id="avatar">
+        <h2>Avatar</h2>
+        <p>User profile images with fallback initials and group stacking.</p>
+        <div class="preview flex items-center gap-4">
+          <div class="avatar avatar-sm">SM</div>
+          <div class="avatar">AP</div>
+          <div class="avatar avatar-lg">LG</div>
+          <div class="avatar avatar-xl">XL</div>
+          <div class="separator-vertical"></div>
+          <div class="avatar-group">
+            <div class="avatar" style="background:var(--primary);color:var(--primary-fg)">A</div>
+            <div class="avatar" style="background:var(--success);color:white">B</div>
+            <div class="avatar" style="background:var(--warning);color:white">C</div>
+            <div class="avatar" style="background:var(--destructive);color:white">+3</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Badge -->
+      <section class="docs-section" id="badge">
+        <h2>Badge</h2>
+        <p>Small status labels and tags.</p>
+        <div class="preview flex flex-wrap gap-2 items-center">
+          <span class="badge">Primary</span>
+          <span class="badge badge-secondary">Secondary</span>
+          <span class="badge badge-outline">Outline</span>
+          <span class="badge badge-destructive">Destructive</span>
+          <span class="badge badge-success">Success</span>
+          <span class="badge badge-warning">Warning</span>
+          <span class="badge badge-ghost">Ghost</span>
+          <span class="badge badge-success badge-dot">Online</span>
+          <span class="badge badge-lg">Large</span>
+        </div>
+      </section>
+
+      <!-- Breadcrumb -->
+      <section class="docs-section" id="breadcrumb">
+        <h2>Breadcrumb</h2>
+        <p>Navigation path indicator.</p>
+        <div class="preview">
+          <ol class="breadcrumb">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Components</a></li>
+            <li><span aria-current="page">Breadcrumb</span></li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Button -->
+      <section class="docs-section" id="button">
+        <h2>Button</h2>
+        <p>Action triggers in multiple variants and sizes.</p>
+        <div class="preview space-y-4">
+          <div class="flex flex-wrap gap-2">
+            <button class="btn">Primary</button>
+            <button class="btn btn-secondary">Secondary</button>
+            <button class="btn btn-destructive">Destructive</button>
+            <button class="btn btn-outline">Outline</button>
+            <button class="btn btn-ghost">Ghost</button>
+            <a href="#" class="btn btn-link">Link</a>
+          </div>
+          <div class="flex flex-wrap gap-2 items-center">
+            <button class="btn btn-sm">Small</button>
+            <button class="btn">Default</button>
+            <button class="btn btn-lg">Large</button>
+            <button class="btn btn-xl">Extra Large</button>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button class="btn btn-icon btn-sm btn-outline" aria-label="Star">&#9733;</button>
+            <button class="btn btn-icon btn-outline" aria-label="Search">&#128269;</button>
+            <button class="btn btn-loading">Loading</button>
+            <button class="btn" disabled>Disabled</button>
+          </div>
+          <div>
+            <div class="btn-group">
+              <button class="btn btn-outline">Left</button>
+              <button class="btn btn-outline">Center</button>
+              <button class="btn btn-outline">Right</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Calendar -->
+      <section class="docs-section" id="calendar">
+        <h2>Calendar</h2>
+        <p>Interactive date picker calendar. Auto-initializes or use <code>Ranju.calendar(el, options)</code>.</p>
+        <div class="preview">
+          <div class="calendar"></div>
+        </div>
+        <div class="code-block">
+          <div class="code-block-header"><span>HTML</span></div>
+          <pre><code>&lt;div class="calendar"&gt;&lt;/div&gt;
+&lt;!-- Auto-initializes. For manual control: --&gt;
+&lt;script&gt;
+Ranju.calendar(el, {
+  onSelect: function(date) { console.log(date); }
+});
+&lt;/script&gt;</code></pre>
+        </div>
+      </section>
+
+      <!-- Card -->
+      <section class="docs-section" id="card">
+        <h2>Card</h2>
+        <p>Flexible content container with header, body, and footer regions.</p>
+        <div class="preview">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Card Title</div>
+                <div class="card-description">A brief description of the card content.</div>
+              </div>
+              <div class="card-content">
+                <p>This is the main body content of the card. Cards can hold any type of content.</p>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-sm">Action</button>
+                <button class="btn btn-sm btn-outline">Cancel</button>
+              </div>
+            </div>
+            <div class="card card-hover">
+              <div class="card-content">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="avatar" style="background:var(--primary);color:white">RJ</div>
+                  <div>
+                    <div class="font-semibold text-sm">ranju</div>
+                    <div class="text-xs text-muted">@ranju &middot; 2h ago</div>
+                  </div>
+                </div>
+                <p class="text-sm">Building RanjuUI — an ultra-lightweight component library. No frameworks needed.</p>
+                <div class="flex gap-2 mt-4">
+                  <span class="badge badge-ghost text-xs">CSS</span>
+                  <span class="badge badge-ghost text-xs">HTML</span>
+                  <span class="badge badge-ghost text-xs">JS</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Carousel -->
+      <section class="docs-section" id="carousel">
+        <h2>Carousel</h2>
+        <p>Image or content slider with navigation controls and dots.</p>
+        <div class="preview">
+          <div class="carousel" style="height:200px">
+            <div class="carousel-track">
+              <div class="carousel-slide flex items-center justify-center" style="background:var(--primary);color:var(--primary-fg)">
+                <div class="text-center"><h3>Slide 1</h3><p class="text-sm" style="opacity:.8">First slide content</p></div>
+              </div>
+              <div class="carousel-slide flex items-center justify-center" style="background:var(--success);color:white">
+                <div class="text-center"><h3>Slide 2</h3><p class="text-sm" style="opacity:.8">Second slide content</p></div>
+              </div>
+              <div class="carousel-slide flex items-center justify-center" style="background:var(--warning);color:white">
+                <div class="text-center"><h3>Slide 3</h3><p class="text-sm" style="opacity:.8">Third slide content</p></div>
+              </div>
+            </div>
+            <button class="carousel-btn carousel-prev">&#8249;</button>
+            <button class="carousel-btn carousel-next">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot"></button>
+              <button class="carousel-dot"></button>
+              <button class="carousel-dot"></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Checkbox & Radio -->
+      <section class="docs-section" id="checkbox">
+        <h2>Checkbox & Radio</h2>
+        <p>Custom styled selection controls with native semantics.</p>
+        <div class="preview">
+          <div class="flex gap-6">
+            <div class="space-y-2">
+              <label class="checkbox"><input type="checkbox" checked><span class="checkbox-mark"></span> Option A</label>
+              <label class="checkbox"><input type="checkbox"><span class="checkbox-mark"></span> Option B</label>
+              <label class="checkbox"><input type="checkbox"><span class="checkbox-mark"></span> Option C</label>
+            </div>
+            <div class="separator-vertical"></div>
+            <div class="space-y-2">
+              <label class="radio"><input type="radio" name="radio-demo" checked><span class="radio-mark"></span> Choice 1</label>
+              <label class="radio"><input type="radio" name="radio-demo"><span class="radio-mark"></span> Choice 2</label>
+              <label class="radio"><input type="radio" name="radio-demo"><span class="radio-mark"></span> Choice 3</label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Collapsible -->
+      <section class="docs-section" id="collapsible">
+        <h2>Collapsible</h2>
+        <p>Simple show/hide toggle for any content block.</p>
+        <div class="preview">
+          <div class="collapsible" data-state="closed">
+            <button class="btn btn-outline btn-sm collapsible-trigger">Toggle Content</button>
+            <div class="collapsible-content">
+              <div class="mt-4 p-4 rounded border text-sm">
+                This content can be shown or hidden by clicking the button above. Use <code>data-state</code> to control initial state.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Combobox -->
+      <section class="docs-section" id="combobox">
+        <h2>Combobox</h2>
+        <p>Searchable dropdown select with filtering.</p>
+        <div class="preview">
+          <div class="combobox" data-state="closed" style="max-width:300px">
+            <input class="combobox-input input" placeholder="Search frameworks...">
+            <ul class="combobox-list">
+              <li class="combobox-option">RanjuUI</li>
+              <li class="combobox-option">React</li>
+              <li class="combobox-option">Vue</li>
+              <li class="combobox-option">Svelte</li>
+              <li class="combobox-option">Angular</li>
+              <li class="combobox-option">Solid</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Command Palette -->
+      <section class="docs-section" id="command">
+        <h2>Command Palette</h2>
+        <p>Keyboard-first command launcher. Press <kbd>Ctrl</kbd> + <kbd>K</kbd> or click the button below.</p>
+        <div class="preview">
+          <button class="btn btn-outline" onclick="Ranju.command.open('cmd-demo')">
+            Open Command Palette &nbsp;<kbd>Ctrl+K</kbd>
+          </button>
+        </div>
+        <div class="command-overlay" id="cmd-demo" data-state="closed">
+          <div class="command-dialog">
+            <div class="command-input-wrapper">
+              <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+              <input class="command-input" placeholder="Type a command or search...">
+            </div>
+            <div class="command-list">
+              <div>
+                <div class="command-group-label">Navigation</div>
+                <div class="command-item">
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+                  Home <span class="command-shortcut">G H</span>
+                </div>
+                <div class="command-item">
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/></svg>
+                  Documentation <span class="command-shortcut">G D</span>
+                </div>
+              </div>
+              <div>
+                <div class="command-group-label">Actions</div>
+                <div class="command-item" onclick="Ranju.theme.toggle(); Ranju.command.close('cmd-demo');">
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+                  Toggle Theme <span class="command-shortcut">T T</span>
+                </div>
+                <div class="command-item">
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
+                  Settings <span class="command-shortcut">G S</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Context Menu -->
+      <section class="docs-section" id="context-menu">
+        <h2>Context Menu</h2>
+        <p>Right-click menu overlay.</p>
+        <div class="preview">
+          <div class="p-8 rounded border text-center text-sm text-muted" data-context-menu="ctx-demo" style="background: var(--muted)">
+            Right-click this area
+          </div>
+        </div>
+        <ul class="context-menu" id="ctx-demo">
+          <li class="context-menu-item">Cut <span class="shortcut">Ctrl+X</span></li>
+          <li class="context-menu-item">Copy <span class="shortcut">Ctrl+C</span></li>
+          <li class="context-menu-item">Paste <span class="shortcut">Ctrl+V</span></li>
+          <li class="context-menu-separator"></li>
+          <li class="context-menu-item">Select All <span class="shortcut">Ctrl+A</span></li>
+          <li class="context-menu-separator"></li>
+          <li class="context-menu-item" data-disabled>Delete</li>
+        </ul>
+      </section>
+
+      <!-- Data Table -->
+      <section class="docs-section" id="data-table">
+        <h2>Data Table</h2>
+        <p>Sortable data tables with hover and stripe options. Click headers to sort.</p>
+        <div class="preview">
+          <div class="table-wrapper">
+            <table class="table-hover">
+              <thead>
+                <tr>
+                  <th data-sortable>Name</th>
+                  <th data-sortable>Status</th>
+                  <th data-sortable>Role</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Alice Chen</td><td><span class="badge badge-success badge-dot">Active</span></td><td>Admin</td><td><button class="btn btn-ghost btn-sm">Edit</button></td></tr>
+                <tr><td>Bob Smith</td><td><span class="badge badge-ghost badge-dot">Inactive</span></td><td>Member</td><td><button class="btn btn-ghost btn-sm">Edit</button></td></tr>
+                <tr><td>Carol Davis</td><td><span class="badge badge-success badge-dot">Active</span></td><td>Editor</td><td><button class="btn btn-ghost btn-sm">Edit</button></td></tr>
+                <tr><td>Dan Wilson</td><td><span class="badge badge-warning badge-dot">Pending</span></td><td>Member</td><td><button class="btn btn-ghost btn-sm">Edit</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dialog -->
+      <section class="docs-section" id="dialog">
+        <h2>Dialog</h2>
+        <p>Modal dialog with overlay, close on backdrop click, and escape key support.</p>
+        <div class="preview flex gap-2">
+          <button class="btn" data-dialog-open="dialog-demo">Open Dialog</button>
+          <button class="btn btn-outline" data-dialog-open="alert-dialog-demo">Alert Dialog</button>
+        </div>
+
+        <div class="dialog-overlay" id="dialog-demo" data-state="closed">
+          <div class="dialog" style="position:relative">
+            <button class="dialog-close" data-dialog-close>&times;</button>
+            <div class="dialog-header">
+              <div class="dialog-title">Edit Profile</div>
+              <div class="dialog-description">Make changes to your profile here.</div>
+            </div>
+            <div class="dialog-body">
+              <div class="field">
+                <label class="label">Name</label>
+                <input type="text" class="input" value="Jane Doe" placeholder="Your name">
+              </div>
+              <div class="field">
+                <label class="label">Email</label>
+                <input type="email" class="input" value="jane@example.com" placeholder="Email">
+              </div>
+            </div>
+            <div class="dialog-footer">
+              <button class="btn btn-outline" data-dialog-close>Cancel</button>
+              <button class="btn" data-dialog-close>Save Changes</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dialog-overlay" id="alert-dialog-demo" data-state="closed">
+          <div class="dialog" style="position:relative">
+            <div class="dialog-header">
+              <div class="dialog-title">Are you absolutely sure?</div>
+              <div class="dialog-description">This action cannot be undone. This will permanently delete your account and remove your data from our servers.</div>
+            </div>
+            <div class="dialog-footer" style="padding-top:1rem">
+              <button class="btn btn-outline" data-dialog-close>Cancel</button>
+              <button class="btn btn-destructive" data-dialog-close>Yes, delete account</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Drawer -->
+      <section class="docs-section" id="drawer">
+        <h2>Drawer & Sheet</h2>
+        <p>Bottom drawer and side sheet panels. Use the standard dialog system with overlay.</p>
+        <div class="preview flex gap-2">
+          <button class="btn btn-outline" data-dialog-open="drawer-overlay-demo">Open Drawer</button>
+          <button class="btn btn-outline" data-dialog-open="sheet-overlay-demo">Open Sheet (Right)</button>
+        </div>
+
+        <div class="dialog-overlay" id="drawer-overlay-demo" data-state="closed"></div>
+        <div class="drawer" data-state="closed">
+          <div class="drawer-handle"></div>
+          <div class="p-6">
+            <h3 class="mb-2">Drawer Title</h3>
+            <p class="text-muted text-sm mb-4">This is a bottom drawer panel. Use it for additional actions or content.</p>
+            <button class="btn" onclick="Ranju.dialog.close('drawer-overlay-demo')">Close Drawer</button>
+          </div>
+        </div>
+
+        <div class="dialog-overlay" id="sheet-overlay-demo" data-state="closed"></div>
+        <div class="sheet" data-state="closed">
+          <div class="p-6">
+            <h3 class="mb-2">Sheet Panel</h3>
+            <p class="text-muted text-sm mb-4">This is a side sheet panel that slides in from the right. Great for detail views, settings, or editing forms.</p>
+            <div class="field">
+              <label class="label">Name</label>
+              <input type="text" class="input" placeholder="Enter name...">
+            </div>
+            <div class="flex gap-2 mt-4">
+              <button class="btn" onclick="Ranju.dialog.close('sheet-overlay-demo')">Save</button>
+              <button class="btn btn-outline" onclick="Ranju.dialog.close('sheet-overlay-demo')">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dropdown -->
+      <section class="docs-section" id="dropdown">
+        <h2>Dropdown</h2>
+        <p>Click-triggered menu overlays.</p>
+        <div class="preview flex gap-2">
+          <div class="dropdown" data-state="closed">
+            <button class="btn btn-outline" data-dropdown-trigger>Options &#9662;</button>
+            <ul class="dropdown-menu">
+              <li class="dropdown-label">My Account</li>
+              <li class="dropdown-item">Profile</li>
+              <li class="dropdown-item">Settings</li>
+              <li class="dropdown-item">Billing</li>
+              <li class="dropdown-separator"></li>
+              <li class="dropdown-item" style="color:var(--destructive)">Log Out</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Empty State -->
+      <section class="docs-section" id="empty-state">
+        <h2>Empty State</h2>
+        <p>Placeholder content for empty lists or search results.</p>
+        <div class="preview">
+          <div class="empty-state">
+            <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+            <div class="empty-state-title">No results found</div>
+            <div class="empty-state-description">Try adjusting your search or filter to find what you're looking for.</div>
+            <button class="btn btn-sm">Clear Filters</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Input & Textarea -->
+      <section class="docs-section" id="input">
+        <h2>Input & Textarea</h2>
+        <p>Form controls with validation states, groups, and field layouts.</p>
+        <div class="preview" style="max-width:420px">
+          <div class="field">
+            <label class="label">Username</label>
+            <input type="text" class="input" placeholder="Enter your username">
+            <div class="field-hint">Must be at least 3 characters.</div>
+          </div>
+          <div class="field">
+            <label class="label label-required">Email</label>
+            <input type="email" class="input" placeholder="name@example.com">
+          </div>
+          <div class="field">
+            <label class="label">Error State</label>
+            <input type="text" class="input input-error" value="bad input">
+            <div class="field-error">This field has an error.</div>
+          </div>
+          <div class="field">
+            <label class="label">Input Group</label>
+            <div class="input-group">
+              <span class="input-group-text">https://</span>
+              <input type="text" class="input" placeholder="example.com">
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Message</label>
+            <textarea placeholder="Type your message..."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- Hover Card -->
+      <section class="docs-section" id="hover-card">
+        <h2>Hover Card</h2>
+        <p>Rich content preview on hover.</p>
+        <div class="preview">
+          <div class="hover-card">
+            <a href="#" class="font-semibold">@ranju</a>
+            <div class="hover-card-content">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="avatar" style="background:var(--primary);color:white">R</div>
+                <div>
+                  <div class="font-semibold text-sm">ranju</div>
+                  <div class="text-xs text-muted">@ranju</div>
+                </div>
+              </div>
+              <p class="text-sm text-muted">Creator of RanjuUI. Building beautiful standards-based web components.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Kbd -->
+      <section class="docs-section" id="kbd">
+        <h2>Kbd</h2>
+        <p>Keyboard shortcut hints.</p>
+        <div class="preview flex flex-wrap items-center gap-2">
+          <kbd>Ctrl</kbd> + <kbd>C</kbd>
+          &nbsp;&nbsp;
+          <kbd>&#8679; Shift</kbd> + <kbd>Enter</kbd>
+          &nbsp;&nbsp;
+          <kbd>Esc</kbd>
+          &nbsp;&nbsp;
+          <kbd>&#8984;</kbd> + <kbd>K</kbd>
+        </div>
+      </section>
+
+      <!-- Label -->
+      <section class="docs-section" id="label">
+        <h2>Label</h2>
+        <p>Form labels with required indicator support.</p>
+        <div class="preview">
+          <label class="label">Regular Label</label>
+          <label class="label label-required">Required Label</label>
+        </div>
+      </section>
+
+      <!-- Menubar -->
+      <section class="docs-section" id="menubar">
+        <h2>Menubar & Navigation</h2>
+        <p>App menubar and responsive navigation bar.</p>
+        <div class="preview space-y-4">
+          <div class="menubar">
+            <div class="menubar-item">File</div>
+            <div class="menubar-item">Edit</div>
+            <div class="menubar-item">View</div>
+            <div class="menubar-item">Help</div>
+          </div>
+          <nav class="navbar rounded border">
+            <a href="#" class="navbar-brand" style="text-decoration:none">RanjuUI</a>
+            <ul class="navbar-nav">
+              <li><a href="#" class="navbar-link" aria-current="page">Home</a></li>
+              <li><a href="#" class="navbar-link">Docs</a></li>
+              <li><a href="#" class="navbar-link">Components</a></li>
+              <li><a href="#" class="navbar-link">GitHub</a></li>
+            </ul>
+          </nav>
+        </div>
+      </section>
+
+      <!-- Meter -->
+      <section class="docs-section" id="meter">
+        <h2>Meter</h2>
+        <p>Value gauge indicator with semantic colors.</p>
+        <div class="preview space-y-4" style="max-width:400px">
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span>Storage</span><span class="text-muted">45%</span></div>
+            <div class="meter"><div class="meter-fill" style="width:45%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span>CPU</span><span class="text-muted">78%</span></div>
+            <div class="meter meter-warning"><div class="meter-fill" style="width:78%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span>Memory</span><span class="text-muted">92%</span></div>
+            <div class="meter meter-destructive"><div class="meter-fill" style="width:92%"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pagination -->
+      <section class="docs-section" id="pagination">
+        <h2>Pagination</h2>
+        <p>Page navigation controls.</p>
+        <div class="preview">
+          <nav class="pagination">
+            <a class="pagination-item" href="#">&laquo;</a>
+            <a class="pagination-item" href="#">1</a>
+            <a class="pagination-item active" aria-current="page" href="#">2</a>
+            <a class="pagination-item" href="#">3</a>
+            <span class="pagination-ellipsis">&hellip;</span>
+            <a class="pagination-item" href="#">12</a>
+            <a class="pagination-item" href="#">&raquo;</a>
+          </nav>
+        </div>
+      </section>
+
+      <!-- Popover -->
+      <section class="docs-section" id="popover">
+        <h2>Popover</h2>
+        <p>Click-triggered floating content panel.</p>
+        <div class="preview">
+          <div class="popover" data-state="closed">
+            <button class="btn btn-outline" data-popover-trigger>Open Popover</button>
+            <div class="popover-content">
+              <h4 class="text-sm font-semibold mb-2">Dimensions</h4>
+              <div class="grid grid-cols-2 gap-2" style="grid-template-columns: auto 1fr">
+                <label class="text-sm text-muted">Width</label>
+                <input type="text" class="input" style="padding:.25rem .5rem;font-size:.8125rem" value="100%">
+                <label class="text-sm text-muted">Height</label>
+                <input type="text" class="input" style="padding:.25rem .5rem;font-size:.8125rem" value="auto">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Progress -->
+      <section class="docs-section" id="progress">
+        <h2>Progress</h2>
+        <p>Determinate and indeterminate loading bars.</p>
+        <div class="preview space-y-4" style="max-width:400px">
+          <div class="progress"><div class="progress-fill" style="width:65%"></div></div>
+          <div class="progress progress-sm"><div class="progress-fill" style="width:40%"></div></div>
+          <div class="progress progress-lg"><div class="progress-fill" style="width:85%"></div></div>
+          <div class="progress progress-indeterminate"><div class="progress-fill"></div></div>
+        </div>
+      </section>
+
+      <!-- Resizable -->
+      <section class="docs-section" id="resizable">
+        <h2>Resizable</h2>
+        <p>Draggable resize handles between panels.</p>
+        <div class="preview">
+          <div class="resizable border rounded" style="height:150px">
+            <div class="resizable-panel p-4 text-sm text-muted">Left Panel</div>
+            <div class="resizable-handle"></div>
+            <div class="resizable-panel p-4 text-sm text-muted">Right Panel</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Scroll Area -->
+      <section class="docs-section" id="scroll-area">
+        <h2>Scroll Area</h2>
+        <p>Custom styled scrollbar container.</p>
+        <div class="preview">
+          <div class="scroll-area border rounded p-4" style="height:150px">
+            <p>Scrollable content area with custom thin scrollbars.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p>Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Separator -->
+      <section class="docs-section" id="separator">
+        <h2>Separator</h2>
+        <p>Horizontal and vertical content dividers.</p>
+        <div class="preview">
+          <p class="text-sm">Content above</p>
+          <hr class="separator">
+          <p class="text-sm">Content below</p>
+          <div class="separator-label">or continue with</div>
+          <div class="flex items-center gap-4">
+            <span class="text-sm">Left</span>
+            <div class="separator-vertical" style="height:1.5rem"></div>
+            <span class="text-sm">Right</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sidebar (component) -->
+      <section class="docs-section" id="sidebar-component">
+        <h2>Sidebar</h2>
+        <p>App sidebar navigation with sections, labels, and collapsible support.</p>
+        <div class="preview">
+          <div class="sidebar border rounded" id="demo-sidebar" style="position:relative;height:300px;width:240px">
+            <div class="sidebar-header">
+              <div class="font-semibold text-sm">Workspace</div>
+            </div>
+            <div class="sidebar-content">
+              <div class="sidebar-label">Main</div>
+              <a class="sidebar-item active" href="#">
+                <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+                <span class="sidebar-item-text">Dashboard</span>
+              </a>
+              <a class="sidebar-item" href="#">
+                <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/></svg>
+                <span class="sidebar-item-text">Documents</span>
+              </a>
+              <a class="sidebar-item" href="#">
+                <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
+                <span class="sidebar-item-text">Settings</span>
+              </a>
+              <div class="sidebar-label">Teams</div>
+              <a class="sidebar-item" href="#">
+                <div class="avatar" style="width:1.125rem;height:1.125rem;font-size:.5rem">D</div>
+                <span class="sidebar-item-text">Design</span>
+              </a>
+              <a class="sidebar-item" href="#">
+                <div class="avatar" style="width:1.125rem;height:1.125rem;font-size:.5rem">E</div>
+                <span class="sidebar-item-text">Engineering</span>
+              </a>
+            </div>
+            <div class="sidebar-footer">
+              <button class="btn btn-ghost btn-sm w-full" data-sidebar-toggle="demo-sidebar">Toggle Sidebar</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Skeleton -->
+      <section class="docs-section" id="skeleton">
+        <h2>Skeleton</h2>
+        <p>Loading placeholder shimmer animations.</p>
+        <div class="preview">
+          <div class="flex gap-4">
+            <div class="skeleton skeleton-avatar"></div>
+            <div class="flex-1">
+              <div class="skeleton skeleton-heading"></div>
+              <div class="skeleton skeleton-text"></div>
+              <div class="skeleton skeleton-text"></div>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="skeleton skeleton-image"></div>
+          </div>
+          <div class="flex gap-2 mt-4">
+            <div class="skeleton skeleton-btn"></div>
+            <div class="skeleton skeleton-btn"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slider -->
+      <section class="docs-section" id="slider">
+        <h2>Slider</h2>
+        <p>Range input with custom styling.</p>
+        <div class="preview" style="max-width:400px">
+          <div class="field">
+            <label class="label">Volume — <span id="slider-val">50</span>%</label>
+            <div class="slider">
+              <input type="range" min="0" max="100" value="50" oninput="document.getElementById('slider-val').textContent=this.value">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Spinner -->
+      <section class="docs-section" id="spinner">
+        <h2>Spinner</h2>
+        <p>Loading indicator variants.</p>
+        <div class="preview flex items-center gap-6">
+          <div>
+            <div class="text-xs text-muted mb-2">Default</div>
+            <div class="flex items-center gap-3">
+              <div class="spinner spinner-sm"></div>
+              <div class="spinner"></div>
+              <div class="spinner spinner-lg"></div>
+              <div class="spinner spinner-xl"></div>
+            </div>
+          </div>
+          <div class="separator-vertical" style="height:3rem"></div>
+          <div>
+            <div class="text-xs text-muted mb-2">Dots</div>
+            <div class="spinner-dots"><span></span><span></span><span></span></div>
+          </div>
+          <div class="separator-vertical" style="height:3rem"></div>
+          <div>
+            <div class="text-xs text-muted mb-2">Bars</div>
+            <div class="spinner-bar"><span></span><span></span><span></span><span></span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Switch & Toggle -->
+      <section class="docs-section" id="switch">
+        <h2>Switch & Toggle</h2>
+        <p>On/off switches and pressable toggle buttons.</p>
+        <div class="preview space-y-4">
+          <div class="flex gap-6">
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+              Airplane Mode
+            </label>
+            <label class="switch">
+              <input type="checkbox">
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+              Notifications
+            </label>
+          </div>
+          <div class="flex gap-2">
+            <button class="toggle active" aria-pressed="true">Bold</button>
+            <button class="toggle" aria-pressed="false">Italic</button>
+            <button class="toggle" aria-pressed="false">Underline</button>
+          </div>
+          <div class="toggle-group">
+            <button class="toggle active" aria-pressed="true">Left</button>
+            <button class="toggle" aria-pressed="false">Center</button>
+            <button class="toggle" aria-pressed="false">Right</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tabs -->
+      <section class="docs-section" id="tabs">
+        <h2>Tabs</h2>
+        <p>Tabbed content panels with underline and pill variants.</p>
+        <div class="preview">
+          <div class="tabs">
+            <div class="tabs-list">
+              <button class="tabs-trigger active" aria-selected="true" data-tab="tab1">Account</button>
+              <button class="tabs-trigger" data-tab="tab2">Password</button>
+              <button class="tabs-trigger" data-tab="tab3">Notifications</button>
+            </div>
+            <div class="tab-panel active" data-tab-panel="tab1">
+              <div class="p-4">
+                <h4>Account Settings</h4>
+                <p class="text-sm text-muted mt-1">Manage your account details and preferences.</p>
+              </div>
+            </div>
+            <div class="tab-panel" data-tab-panel="tab2">
+              <div class="p-4">
+                <h4>Password</h4>
+                <p class="text-sm text-muted mt-1">Change your password and security settings.</p>
+              </div>
+            </div>
+            <div class="tab-panel" data-tab-panel="tab3">
+              <div class="p-4">
+                <h4>Notifications</h4>
+                <p class="text-sm text-muted mt-1">Configure how you receive notifications.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Toast -->
+      <section class="docs-section" id="toast">
+        <h2>Toast / Notification</h2>
+        <p>Non-blocking notifications via JavaScript API.</p>
+        <div class="preview flex flex-wrap gap-2">
+          <button class="btn btn-outline" onclick="Ranju.toast({title:'Event Created',description:'Your event has been saved.',position:'bottom-right'})">Default Toast</button>
+          <button class="btn btn-outline" onclick="Ranju.toast({title:'Success!',description:'Changes have been saved.',variant:'success',position:'bottom-right'})">Success</button>
+          <button class="btn btn-outline" onclick="Ranju.toast({title:'Error',description:'Something went wrong.',variant:'destructive',position:'bottom-right'})">Error</button>
+          <button class="btn btn-outline" onclick="Ranju.toast({title:'Warning',description:'Please check your input.',variant:'warning',position:'bottom-right'})">Warning</button>
+        </div>
+        <div class="code-block">
+          <div class="code-block-header"><span>JS</span></div>
+          <pre><code>Ranju.toast({
+  title: 'Saved!',
+  description: 'Your changes have been saved.',
+  variant: 'success',     // 'success' | 'destructive' | 'warning'
+  duration: 4000,          // ms, 0 = persistent
+  position: 'bottom-right' // top-right, top-left, bottom-left, etc.
+});</code></pre>
+        </div>
+      </section>
+
+      <!-- Tooltip -->
+      <section class="docs-section" id="tooltip">
+        <h2>Tooltip</h2>
+        <p>Lightweight hover hints. CSS-only or use <code>data-tooltip</code> for JS-enhanced tooltips.</p>
+        <div class="preview flex gap-4">
+          <div class="tooltip">
+            <button class="btn btn-outline btn-sm">Hover me (CSS)</button>
+            <div class="tooltip-content">CSS-only tooltip</div>
+          </div>
+          <button class="btn btn-outline btn-sm" data-tooltip="JS-enhanced tooltip">Hover me (JS)</button>
+        </div>
+      </section>
+
+      <!-- Item Group -->
+      <section class="docs-section" id="item-group">
+        <h2>Item Group</h2>
+        <p>Vertical or horizontal list layout for items with icons, text, and actions.</p>
+        <div class="preview">
+          <div class="item-group border rounded">
+            <div class="item item-clickable">
+              <svg class="item-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+              <div class="item-content">
+                <div class="item-title">Dashboard</div>
+                <div class="item-description">Overview of your workspace</div>
+              </div>
+              <span class="badge badge-ghost text-xs item-action">New</span>
+            </div>
+            <div class="item item-clickable">
+              <svg class="item-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg>
+              <div class="item-content">
+                <div class="item-title">Profile</div>
+                <div class="item-description">Manage your account settings</div>
+              </div>
+            </div>
+            <div class="item item-clickable">
+              <svg class="item-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
+              <div class="item-content">
+                <div class="item-title">Settings</div>
+                <div class="item-description">Configure your preferences</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="py-8 text-center border-t mt-8">
+        <p class="text-sm text-muted"><strong>RanjuUI</strong> &mdash; Open source under the <a href="https://github.com/Alps-is-Core/RanjuUI/blob/master/LICENSE">MIT License</a>.</p>
+        <p class="text-xs text-muted mt-1">No frameworks. No build tools. No dependencies. Just standards-based UI that lasts.</p>
+        <div class="flex justify-center gap-2 mt-4">
+          <a href="https://github.com/Alps-is-Core/RanjuUI" target="_blank" class="btn btn-sm btn-outline">Star on GitHub</a>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+
+  <script src="ranju.js"></script>
+  <script>
+    /* Sidebar active link highlight + close on mobile */
+    document.querySelectorAll('.docs-sidebar a[href^="#"]').forEach(function(a) {
+      a.addEventListener('click', function() {
+        document.querySelectorAll('.docs-sidebar a').forEach(function(el) { el.style.color = ''; el.style.background = ''; });
+        this.style.color = 'var(--fg)';
+        this.style.background = 'var(--muted)';
+        closeMobileMenu();
+      });
+    });
+
+    /* Mobile sidebar toggle */
+    function toggleMobileMenu() {
+      document.querySelector('.docs-sidebar').classList.toggle('open');
+      document.getElementById('mobile-overlay').classList.toggle('open');
+    }
+    function closeMobileMenu() {
+      document.querySelector('.docs-sidebar').classList.remove('open');
+      document.getElementById('mobile-overlay').classList.remove('open');
+    }
+
+    /* Theme icon sync */
+    var themeIcon = document.querySelector('.theme-icon');
+    function updateThemeIcon() {
+      if (themeIcon) themeIcon.textContent = Ranju.theme.current() === 'dark' ? '\u2600' : '\u263E';
+    }
+    var origToggle = Ranju.theme.toggle.bind(Ranju.theme);
+    Ranju.theme.toggle = function() { origToggle(); updateThemeIcon(); };
+    updateThemeIcon();
+  </script>
+</body>
+</html>
