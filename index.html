@@ -296,12 +296,18 @@
       <!-- Installation -->
       <section class="docs-section" id="installation">
         <h2>Installation</h2>
-        <p>Drop two files into your project — that's it.</p>
+        <p>Include two files — CDN or self-hosted.</p>
         <div class="code-block">
-          <div class="code-block-header"><span>HTML</span></div>
+          <div class="code-block-header"><span>CDN (quickest)</span></div>
+          <pre><code>&lt;link rel="stylesheet" href="https://alps-is-core.github.io/RanjuUI/ranju.css"&gt;
+&lt;script src="https://alps-is-core.github.io/RanjuUI/ranju.js" defer&gt;&lt;/script&gt;</code></pre>
+        </div>
+        <div class="code-block">
+          <div class="code-block-header"><span>Self-hosted (download ranju.css & ranju.js)</span></div>
           <pre><code>&lt;link rel="stylesheet" href="ranju.css"&gt;
 &lt;script src="ranju.js" defer&gt;&lt;/script&gt;</code></pre>
         </div>
+        <p class="text-sm text-muted">The CSS and JS bundles at the repo root are built from <code>src/css/</code> and <code>src/js/</code> via <code>make dist</code>. Use the bundles for the full library, or import individual component files for smaller payloads.</p>
       </section>
 
       <!-- Theming -->
